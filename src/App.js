@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import React from 'react';
 
 function formatName(user) {
   return user.firstName + ' ' + user.lastName;
@@ -16,23 +17,34 @@ function UserName(props) {
   )
 }
 
-// function Clock(props) {
-//   return (
-//     <div>
-//       <h1>Bonjour, monde !</h1>
-//       <h2>Il est {props.date.toLocaleTimeString()}.</h2>
-//     </div>
-//   );
-// }
+class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { date: new Date() };
+  }
+  componentDidMount() {
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
 
-// function tick() {
-//   ReactDOM.render(
-//     <Clock date={new Date()} />,
-//     document.getElementById('root')
-//   );
-// }
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
 
-// setInterval(tick, 1000);
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  render() {
+    return (
+      <h2>Il est {this.state.date.toLocaleTimeString()}.</h2>
+    )
+  }
+}
 
 function App() {
   return (
@@ -40,6 +52,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <UserName fullName={formatName(user)} />
+        <Clock />
         <a
           className="App-link"
           href="https://reactjs.org"
