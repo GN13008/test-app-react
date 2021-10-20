@@ -46,6 +46,52 @@ class Clock extends React.Component {
   }
 }
 
+class Toggle extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { isToggleOn: true };
+
+    // Cette liaison est nécéssaire afin de permettre
+    // l'utilisation de `this` dans la fonction de rappel.
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick(e) {
+    this.setState(state => ({
+      isToggleOn: !state.isToggleOn
+    }));
+    console.log(e);
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={(e) => this.handleClick(e)}>
+          {this.state.isToggleOn ? 'Bonjour' : 'Salut'}
+        </button>
+        <Coucou result={this.state.isToggleOn} />
+      </div>
+    );
+  }
+}
+
+function Bonjour(props) {
+  return <h3>Bonjour</h3>;
+}
+
+function Salut(props) {
+  return <h3>Salut</h3>;
+}
+
+function Coucou(props) {
+  const result = props.result;
+  if (result) {
+    return <Bonjour />;
+  }
+  return <Salut />;
+}
+
+
 function App() {
   return (
     <div className="App">
@@ -53,14 +99,16 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <UserName fullName={formatName(user)} />
         <Clock />
-        <a
+        {/* <a
           className="App-link"
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
         >
           Learn React
-        </a>
+        </a> */}
+        <br />
+        <Toggle />
       </header>
     </div>
   );
