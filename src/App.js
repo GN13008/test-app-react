@@ -91,35 +91,84 @@ function Coucou(props) {
   return <Salut />;
 }
 
-function Blog(props) {
-  const sidebar = (
+function Sidebar(props) {
+  return (
     <ul>
       {props.posts.map((post) =>
         <li key={post.id}>
-          {post.title}
+          {post.Name}
         </li>
       )}
     </ul>
   );
-  const content = props.posts.map((post) =>
-    <div key={post.id}>
-      <h3>{post.title}</h3>
-      <p>{post.content}</p>
-    </div>
-  );
+}
+
+function Content(props) {
   return (
-    <div>
-      {sidebar}
-      <hr />
-      {content}
-    </div>
+    props.posts.map((post) =>
+      <div key={post.id}>
+        <h3>{post.title}</h3>
+        <p>{post.content}</p>
+      </div>
+    )
   );
 }
 
+class Blog extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { props: posts };
+  }
+  // componentDidMount() {
+  //   this.timerID = setInterval(
+  //     () => this.tick(),
+  //     1000
+  //   );
+  // }
+
+  // componentWillUnmount() {
+  //   clearInterval(this.timerID);
+  // }
+
+  // tick() {
+  //   this.setState({
+  //     date: new Date()
+  //   });
+  // }
+
+  render() {
+    return (
+      <div>
+        <Sidebar posts={this.state.props} />
+        <hr />
+        <Content posts={this.state.props} />
+      </div>
+    )
+  }
+}
+
+// function callAPI() {
+//   fetch("https://raw.githubusercontent.com/gn13008/data_json/master/test.json")
+//     .then(response => response.json())
+//     .then((data) => {
+//       console.log(data);
+//       data.forEach(dat => posts.push(dat))
+//       console.log("voici ma variable posts");
+//       console.log(posts);
+//       console.log("ceci est posts2");
+//       console.log(posts2);
+//     });
+// }
+// const posts = data.map(post => { id: post.id, title: post.Name, content: post.content });
+// console.log(posts);
+
+// On test d'appeler les posts depuis un repo github
 const posts = [
-  { id: 1, title: 'Bonjour, monde', content: 'Bienvenue sur la doc de React !' },
-  { id: 2, title: 'Installation', content: 'Vous pouvez installer React depuis npm.' }
+  { id: 1, Name: 'Bonjour, monde', content: 'Bienvenue sur la doc de React !' },
+  { id: 2, Name: 'Installation', content: 'Vous pouvez installer React depuis npm.' }
 ];
+
+
 
 function App() {
   return (
