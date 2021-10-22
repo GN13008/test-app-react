@@ -155,27 +155,55 @@ class Blog extends React.Component {
   }
 }
 
-// function callAPI() {
-//   fetch("https://raw.githubusercontent.com/gn13008/data_json/master/test.json")
-//     .then(response => response.json())
-//     .then((data) => {
-//       console.log(data);
-//       data.forEach(dat => posts.push(dat))
-//       console.log("voici ma variable posts");
-//       console.log(posts);
-//       console.log("ceci est posts2");
-//       console.log(posts2);
-//     });
-// }
-// const posts = data.map(post => { id: post.id, title: post.Name, content: post.content });
-// console.log(posts);
-
 // On test d'appeler les posts depuis un repo github
 const posts = [
   { id: 1, Name: 'Bonjour, monde', content: 'Bienvenue sur la doc de React !' },
   { id: 2, Name: 'Installation', content: 'Vous pouvez installer React depuis npm.' }
 ];
 
+class NameForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: 'test' };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({ value: event.target.value });
+  }
+
+  handleSubmit(event) {
+    alert('Le nom a été soumis : ' + this.state.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Nom du fichier :
+          <br />
+          <input type="text" value={this.state.value} onChange={this.handleChange} />
+          <br />
+          Text Area
+          <br />
+          <textarea value={this.state.value} onChange={this.handleChange} />
+          <br />
+          Select
+          <br />
+          <select>
+            <option selected value="test">Test</option>
+            <option value="test2">Test 2</option>
+          </select>
+          <br />
+        </label>
+        <input type="submit" value="Charger les données" />
+      </form>
+    );
+  }
+}
 
 
 function App() {
@@ -185,6 +213,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <UserName fullName={formatName(user)} />
         <Clock />
+        <NameForm />
         {/* <a
           className="App-link"
           href="https://reactjs.org"
