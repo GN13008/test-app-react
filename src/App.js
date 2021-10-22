@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import './Dialogue.css';
 import React from 'react';
 
 function formatName(user) {
@@ -46,78 +47,28 @@ class Clock extends React.Component {
   }
 }
 
-// class Toggle extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = { isToggleOn: true };
-
-//     // Cette liaison est nécéssaire afin de permettre
-//     // l'utilisation de `this` dans la fonction de rappel.
-//     this.handleClick = this.handleClick.bind(this);
-//   }
-
-//   handleClick(e) {
-//     this.setState(state => ({
-//       isToggleOn: !state.isToggleOn
-//     }));
-//     console.log(e);
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         <button onClick={(e) => this.handleClick(e)}>
-//           {this.state.isToggleOn ? 'Bonjour' : 'Salut'}
-//         </button>
-//         <Coucou result={this.state.isToggleOn} />
-//       </div>
-//     );
-//   }
-// }
-
-// function Bonjour(props) {
-//   return <h3>Bonjour</h3>;
-// }
-
-// function Salut(props) {
-//   return <h3>Salut</h3>;
-// }
-
-// function Coucou(props) {
-//   const result = props.result;
-//   if (result) {
-//     return <Bonjour />;
-//   }
-//   return <Salut />;
-// }
-
-function Sidebar(props) {
-  return (
-    <ul>
-      {props.posts.map((post) =>
-        <li key={post.id}>
-          {post.Name}
-        </li>
-      )}
-    </ul>
-  );
-}
-
 function Content(props) {
   return (
     props.posts.map((post) =>
-      <div key={post.id}>
-        <h3>{post.Name}</h3>
-        <p>{post.content}</p>
+      <div className="punchline" key={post.id}>
+        <h3>{post.Name} :</h3>
+        <p>"{post.content}"</p>
       </div>
     )
   );
 }
 
+
+// On test d'appeler les posts depuis un repo github
+const posts = [
+  { id: 1, Name: 'React', content: 'Bienvenue sur la doc de React !' },
+  { id: 2, Name: 'React', content: 'Vous pouvez installer React depuis npm.' }
+];
+
 class Blog extends React.Component {
   constructor(props) {
     super(props);
-    this.callAPI = this.callAPI.bind(this);
+    this.call = this.callAPI.bind(this);
     this.state = {
       file: props.file,
       posts: posts
@@ -125,13 +76,13 @@ class Blog extends React.Component {
   }
 
   componentDidMount() {
-    this.callAPI(this.state.file)
+    this.callAPI(this.props.file);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.file !== prevProps.file) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
+    if (this.props.file !== prevProps.file) // Check if it's a new file
     {
-      this.callAPI(this.state.file);
+      this.callAPI(this.props.file);
     }
   }
 
@@ -145,23 +96,9 @@ class Blog extends React.Component {
       });
   }
 
-  // componentWillUnmount() {
-  //   clearInterval(this.timerID);
-  // }
-
-  // tick() {
-  //   this.setState({
-  //     date: new Date()
-  //   });
-  // }
-
   render() {
     return (
-      <div>
-        <p>le state : {this.state.file}, le props : {this.props.file}</p>
-        <QuelFichier file={this.props.file} />
-        <hr />
-        <Sidebar file={this.props.file} posts={this.state.posts} />
+      <div className="dialogue">
         <hr />
         <Content file={this.props.file} posts={this.state.posts} />
       </div>
@@ -169,17 +106,10 @@ class Blog extends React.Component {
   }
 }
 
-// On test d'appeler les posts depuis un repo github
-const posts = [
-  { id: 1, Name: 'Bonjour, monde', content: 'Bienvenue sur la doc de React !' },
-  { id: 2, Name: 'Installation', content: 'Vous pouvez installer React depuis npm.' }
-];
-
 class NameForm extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.state = { value: 'test2' };
   }
 
@@ -187,27 +117,21 @@ class NameForm extends React.Component {
     this.setState({ value: e.target.value });
   }
 
-  handleSubmit(event) {
-    alert('Le nom a été soumis : ' + this.state.value);
-    // this.setState((state) => ({ value: state.value }));
-    event.preventDefault();
-  }
-
   render() {
     const file = this.state.value;
     return (
       <div className="">
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Nom du fichier :
-            <br />
-            <select value={this.state.value} onChange={this.handleChange}>
+        <form>
+          <div className="form-group">
+            {/* TODO : Un peu de style dans ce form select */}
+            <h3>Quel discussion veux tu lire ?</h3>
+            {/* TODO : Générer la liste des conversation disponible */}
+            <select className="form-control" value={this.state.value} onChange={this.handleChange}>
               <option value="test">Test</option>
               <option value="test2">Test 2</option>
             </select>
-            <br />
-          </label>
-          {/* <input type="submit" value="Charger les données" /> */}
+          </div>
+          <br />
         </form>
         <Blog file={file} />
       </div>
@@ -215,58 +139,15 @@ class NameForm extends React.Component {
   }
 }
 
-// class Calculator extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.handleChange = this.handleChange.bind(this);
-//     this.state = { temperature: '' };
-//   }
-
-//   handleChange(e) {
-//     this.setState({ temperature: e.target.value });
-//   }
-
-//   render() {
-//     const temperature = this.state.temperature;
-//     return (
-//       <fieldset>
-//         <legend>Saisissez la température en Celsius :</legend>
-//         <input
-//           value={temperature}
-//           onChange={this.handleChange} />
-//         <BoilingVerdict
-//           celsius={parseFloat(temperature)} />
-//       </fieldset>
-//     );
-//   }
-// }
-
-function QuelFichier(props) {
-  if (props.file === "test2") {
-    return <p>Il appelle test 2</p>;
-  }
-  return <p>Il appelle test 1</p>;
-}
-
 function App() {
   return (
     <div className="App">
-      {/* <Calculator /> */}
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <UserName fullName={formatName(user)} />
         <Clock />
         <NameForm />
-        {/* <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a> */}
         <br />
-        {/* <Toggle /> */}
       </header>
     </div>
   );

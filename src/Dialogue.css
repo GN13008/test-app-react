@@ -1,0 +1,12 @@
+.punchline {
+  display: flex;
+  align-items: baseline; 
+}
+
+.punchline > h3 {
+  flex-shrink: 0;
+}
+.punchline > p {
+  margin-left: 8px;
+  text-align: left;
+}
