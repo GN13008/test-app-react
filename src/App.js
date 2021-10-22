@@ -107,7 +107,7 @@ function Content(props) {
   return (
     props.posts.map((post) =>
       <div key={post.id}>
-        <h3>{post.title}</h3>
+        <h3>{post.Name}</h3>
         <p>{post.content}</p>
       </div>
     )
@@ -119,12 +119,20 @@ class Blog extends React.Component {
     super(props);
     this.state = { props: posts };
   }
-  // componentDidMount() {
-  //   this.timerID = setInterval(
-  //     () => this.tick(),
-  //     1000
-  //   );
-  // }
+
+  componentDidMount() {
+    fetch("https://raw.githubusercontent.com/gn13008/data_json/master/test.json")
+      .then(response => response.json())
+      .then((data) => {
+        console.log(data);
+        data.forEach(dat => posts.push(dat))
+        console.log("voici ma variable posts");
+        console.log(posts);
+        this.setState({
+          props: data
+        });
+      });
+  }
 
   // componentWillUnmount() {
   //   clearInterval(this.timerID);
