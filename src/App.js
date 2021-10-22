@@ -46,50 +46,50 @@ class Clock extends React.Component {
   }
 }
 
-class Toggle extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { isToggleOn: true };
+// class Toggle extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = { isToggleOn: true };
 
-    // Cette liaison est nécéssaire afin de permettre
-    // l'utilisation de `this` dans la fonction de rappel.
-    this.handleClick = this.handleClick.bind(this);
-  }
+//     // Cette liaison est nécéssaire afin de permettre
+//     // l'utilisation de `this` dans la fonction de rappel.
+//     this.handleClick = this.handleClick.bind(this);
+//   }
 
-  handleClick(e) {
-    this.setState(state => ({
-      isToggleOn: !state.isToggleOn
-    }));
-    console.log(e);
-  }
+//   handleClick(e) {
+//     this.setState(state => ({
+//       isToggleOn: !state.isToggleOn
+//     }));
+//     console.log(e);
+//   }
 
-  render() {
-    return (
-      <div>
-        <button onClick={(e) => this.handleClick(e)}>
-          {this.state.isToggleOn ? 'Bonjour' : 'Salut'}
-        </button>
-        <Coucou result={this.state.isToggleOn} />
-      </div>
-    );
-  }
-}
+//   render() {
+//     return (
+//       <div>
+//         <button onClick={(e) => this.handleClick(e)}>
+//           {this.state.isToggleOn ? 'Bonjour' : 'Salut'}
+//         </button>
+//         <Coucou result={this.state.isToggleOn} />
+//       </div>
+//     );
+//   }
+// }
 
-function Bonjour(props) {
-  return <h3>Bonjour</h3>;
-}
+// function Bonjour(props) {
+//   return <h3>Bonjour</h3>;
+// }
 
-function Salut(props) {
-  return <h3>Salut</h3>;
-}
+// function Salut(props) {
+//   return <h3>Salut</h3>;
+// }
 
-function Coucou(props) {
-  const result = props.result;
-  if (result) {
-    return <Bonjour />;
-  }
-  return <Salut />;
-}
+// function Coucou(props) {
+//   const result = props.result;
+//   if (result) {
+//     return <Bonjour />;
+//   }
+//   return <Salut />;
+// }
 
 function Sidebar(props) {
   return (
@@ -117,19 +117,30 @@ function Content(props) {
 class Blog extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { props: posts };
+    this.callAPI = this.callAPI.bind(this);
+    this.state = {
+      file: props.file,
+      posts: posts
+    };
   }
 
   componentDidMount() {
-    fetch("https://raw.githubusercontent.com/gn13008/data_json/master/test.json")
+    this.callAPI(this.state.file)
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.file !== prevProps.file) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
+    {
+      this.callAPI(this.state.file);
+    }
+  }
+
+  callAPI(file) {
+    fetch(`https://raw.githubusercontent.com/gn13008/data_json/master/${file}.json`)
       .then(response => response.json())
       .then((data) => {
-        console.log(data);
-        data.forEach(dat => posts.push(dat))
-        console.log("voici ma variable posts");
-        console.log(posts);
         this.setState({
-          props: data
+          posts: data
         });
       });
   }
@@ -147,9 +158,12 @@ class Blog extends React.Component {
   render() {
     return (
       <div>
-        <Sidebar posts={this.state.props} />
+        <p>le state : {this.state.file}, le props : {this.props.file}</p>
+        <QuelFichier file={this.props.file} />
         <hr />
-        <Content posts={this.state.props} />
+        <Sidebar file={this.props.file} posts={this.state.posts} />
+        <hr />
+        <Content file={this.props.file} posts={this.state.posts} />
       </div>
     )
   }
@@ -164,51 +178,80 @@ const posts = [
 class NameForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: 'test' };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = { value: 'test2' };
   }
 
-  handleChange(event) {
-    this.setState({ value: event.target.value });
+  handleChange(e) {
+    this.setState({ value: e.target.value });
   }
 
   handleSubmit(event) {
     alert('Le nom a été soumis : ' + this.state.value);
+    // this.setState((state) => ({ value: state.value }));
     event.preventDefault();
   }
 
   render() {
+    const file = this.state.value;
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Nom du fichier :
-          <br />
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
-          <br />
-          Text Area
-          <br />
-          <textarea value={this.state.value} onChange={this.handleChange} />
-          <br />
-          Select
-          <br />
-          <select>
-            <option selected value="test">Test</option>
-            <option value="test2">Test 2</option>
-          </select>
-          <br />
-        </label>
-        <input type="submit" value="Charger les données" />
-      </form>
+      <div className="">
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Nom du fichier :
+            <br />
+            <select value={this.state.value} onChange={this.handleChange}>
+              <option value="test">Test</option>
+              <option value="test2">Test 2</option>
+            </select>
+            <br />
+          </label>
+          {/* <input type="submit" value="Charger les données" /> */}
+        </form>
+        <Blog file={file} />
+      </div>
     );
   }
 }
 
+// class Calculator extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.handleChange = this.handleChange.bind(this);
+//     this.state = { temperature: '' };
+//   }
+
+//   handleChange(e) {
+//     this.setState({ temperature: e.target.value });
+//   }
+
+//   render() {
+//     const temperature = this.state.temperature;
+//     return (
+//       <fieldset>
+//         <legend>Saisissez la température en Celsius :</legend>
+//         <input
+//           value={temperature}
+//           onChange={this.handleChange} />
+//         <BoilingVerdict
+//           celsius={parseFloat(temperature)} />
+//       </fieldset>
+//     );
+//   }
+// }
+
+function QuelFichier(props) {
+  if (props.file === "test2") {
+    return <p>Il appelle test 2</p>;
+  }
+  return <p>Il appelle test 1</p>;
+}
 
 function App() {
   return (
     <div className="App">
+      {/* <Calculator /> */}
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <UserName fullName={formatName(user)} />
@@ -223,8 +266,7 @@ function App() {
           Learn React
         </a> */}
         <br />
-        <Toggle />
-        <Blog posts={posts} />
+        {/* <Toggle /> */}
       </header>
     </div>
   );
