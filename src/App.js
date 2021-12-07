@@ -18,6 +18,12 @@ function UserName(props) {
   )
 }
 
+function Label(props) {
+  return (
+    <div style={{ color: props.color }}> {props.value}</div >
+  );
+}
+
 class Clock extends React.Component {
   constructor(props) {
     super(props);
@@ -143,6 +149,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <Label value={'Hello World!'} color={'red'} />
         <img src={logo} className="App-logo" alt="logo" />
         <UserName fullName={formatName(user)} />
         <Clock />
